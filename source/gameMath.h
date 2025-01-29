@@ -33,6 +33,10 @@ float Lerp(int a, int b, float t) // Made by Cade Dowdy©
     return (float)a + t * ((float)b - (float)a);
 }
 
+
+
+// all of this is for sleeping with milliseconds across platforms
+
 #ifdef _WIN32
     #include <windows.h>  // Windows Sleep(ms)
 #else
