@@ -198,6 +198,8 @@ void keyDown(unsigned char key, int x, int y)
     {
       score += 1;
 
+      if (score % 10 == 0) playerLives++;
+
       sprintf(playerScore, "%d", score);
 
       caughtFish = true;
