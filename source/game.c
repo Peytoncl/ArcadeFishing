@@ -52,6 +52,7 @@ int fishProximityDistance = 100;
 int score = 0;
 
 char playerScore[1000];
+char playerHighscore[1000];
 
 
 int playerLives = 5;
@@ -65,6 +66,9 @@ unsigned long lastUpdate = 0;
 //Ball speed
 const unsigned long FRAME_TIME = 1; 
 
+FILE* highscoreFile;
+
+int highscore;
 
 void SpawnFish()
 {
@@ -107,6 +111,14 @@ void StartGame()
 void init()
 {
   glClearColor(0, 0, 0, 0);
+
+  highscoreFile = fopen("score.bin", "rb");
+
+  fread(&highscore, sizeof(int), 1, highscoreFile);
+
+  sprintf(playerHighscore, "%d", highscore);
+
+  fclose(highscoreFile);
 
   RandomInitialization();
 
@@ -174,7 +186,9 @@ void display()
 
   glEnd();
 
-  drawText(0 + 30, WINDOW_H - 30, gameFont, playerScore, 1, 1, 1, 1.0f);
+  drawText(0 + 30, WINDOW_H - 30, gameFont, playerHighscore, 1, 0.8f, 0, 1.0f);
+
+  drawText(0 + 30, WINDOW_H - 160, gameFont, playerScore, 1, 1, 1, 1.0f);
 
   glutSwapBuffers();
 
@@ -210,7 +224,23 @@ void keyDown(unsigned char key, int x, int y)
     {
       playerLives -= 1;
 
-      if(playerLives <= 0) StartGame();
+      if(playerLives <= 0) 
+      {
+        if (score > highscore)
+        {
+          highscoreFile = fopen("score.bin", "wb");
+
+          fwrite(&score, sizeof(int), 1, highscoreFile);          
+
+          fclose(highscoreFile);
+
+          highscore = score;
+
+          sprintf(playerHighscore, "%d", highscore);
+        }
+
+        StartGame();
+      }
     }
 
   } 
